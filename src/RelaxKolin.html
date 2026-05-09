@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salon Relax Kolín – Kosmetické služby</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --cream: #FAF7F2;
+  --rose: #C9897A;
+  --rose-light: #F0DDD8;
+  --rose-dark: #8B5549;
+  --sage: #8A9E8C;
+  --sage-light: #D8E5D9;
+  --charcoal: #2C2825;
+  --warm-gray: #6B6259;
+  --border: rgba(44,40,37,0.12);
+
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--charcoal);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* NAV */
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 1.25rem 4rem;
+
+  background: rgba(250,247,242,0.92);
+  backdrop-filter: blur(12px);
+
+  border-bottom: 0.5px solid var(--border);
+
+  transition: 0.3s;
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+
+  color: var(--charcoal);
+  text-decoration: none;
+}
+
+.nav-logo span {
+  color: var(--rose);
+  font-style: italic;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color: var(--warm-gray);
+  text-decoration: none;
+
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--rose);
+}
+
+.nav-cta {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color: var(--cream);
+  background: var(--charcoal);
+
+  border: none;
+
+  padding: 0.65rem 1.6rem;
+
+  text-decoration: none;
+
+  transition: 0.25s;
+}
+
+.nav-cta:hover {
+  background: var(--rose-dark);
+}
+
+/* HERO */
+
+.hero {
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  padding-top: 5rem;
+
+  overflow: hidden;
+}
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 6rem 4rem;
+}
+
+.hero-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+
+  color: var(--rose);
+
+  margin-bottom: 1.5rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-tag::before {
+  content: '';
+
+  width: 2rem;
+  height: 1px;
+
+  background: var(--rose);
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+
+  color: var(--charcoal);
+
+  margin-bottom: 2rem;
+}
+
+.hero h1 em {
+  color: var(--rose);
+  font-style: italic;
+}
+
+.hero-sub {
+  max-width: 420px;
+
+  color: var(--warm-gray);
+
+  line-height: 1.8;
+
+  margin-bottom: 3rem;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.btn-primary {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  color: var(--cream);
+  background: var(--charcoal);
+
+  padding: 1rem 2.4rem;
+
+  text-decoration: none;
+
+  transition: 0.25s;
+}
+
+.btn-primary:hover {
+  background: var(--rose-dark);
+  transform: translateY(-2px);
+}
+
+.btn-text {
+  font-size: 0.82rem;
+
+  color: var(--warm-gray);
+
+  text-decoration: none;
+
+  border-bottom: 1px solid var(--border);
+
+  transition: 0.25s;
+}
+
+.btn-text:hover {
+  color: var(--rose);
+  border-color: var(--rose);
+}
+
+.hero-right {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-right::after {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(201,137,122,0.15) 0%,
+      transparent 60%
+    );
+}
+
+.hero-bg {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  display: block;
+}
+
+/* HERO BADGE */
+
+.hero-badge {
+  position: absolute;
+
+  bottom: 3rem;
+  left: 2rem;
+
+  background: rgba(250,247,242,0.96);
+  backdrop-filter: blur(10px);
+
+  padding: 1.6rem 2rem;
+
+  border: 1px solid rgba(0,0,0,0.05);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.08),
+    0 2px 10px rgba(0,0,0,0.04);
+
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  min-width: 190px;
+}
+
+.hero-badge-num {
+  font-family: var(--serif);
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1;
+
+  color: var(--rose);
+
+  margin-bottom: 0.35rem;
+}
+
+.hero-badge-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: var(--warm-gray);
+
+  line-height: 1.4;
+}
+
+/* MOBILE */
+
+.menu-toggle {
+  display: none;
+
+  background: none;
+  border: none;
+}
+
+.menu-toggle svg {
+  width: 28px;
+  height: 28px;
+}
+
+@media (max-width: 980px) {
+
+  nav {
+    padding: 1rem 1.5rem;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;
+
+    top: 72px;
+    left: 0;
+    right: 0;
+
+    flex-direction: column;
+
+    background: rgba(250,247,242,0.98);
+    backdrop-filter: blur(14px);
+
+    padding: 2rem;
+
+    transform: translateY(-120%);
+    transition: 0.3s;
+  }
+
+  .nav-links.active {
+    transform: translateY(0);
+  }
+
+  .nav-cta {
+    display: none;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .hero-left {
+    padding: 5rem 1.5rem 3rem;
+  }
+
+  .hero-right {
+    min-height: 420px;
+  }
+
+  .hero-badge {
+    left: 1.5rem;
+    bottom: 1.5rem;
+
+    padding: 1.2rem 1.4rem;
+
+    min-width: 150px;
+  }
+
+  .hero-badge-num {
+    font-size: 2.6rem;
+  }
+
+  .hero-badge-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-tag {
+  animation: fadeUp 0.7s ease 0.1s both;
+}
+
+.hero h1 {
+  animation: fadeUp 0.7s ease 0.2s both;
+}
+
+.hero-sub {
+  animation: fadeUp 0.7s ease 0.35s both;
+}
+
+.hero-actions {
+  animation: fadeUp 0.7s ease 0.5s both;
+}
+
+.hero-right {
+  animation: fadeUp 0.9s ease 0.15s both;
+}
+  /* STRIP */
+
+.strip {
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+
+  padding: 1.5rem 4rem;
+
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+
+  overflow-x: auto;
+}
+
+.strip-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  white-space: nowrap;
+
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  color: var(--warm-gray);
+}
+
+.strip-item svg {
+  color: var(--rose);
+  flex-shrink: 0;
+}
+
+/* SECTIONS */
+
+.services,
+.testimonials,
+.booking,
+.cta-section {
+  padding: 7rem 4rem;
+}
+
+.section-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 4rem;
+
+  margin-bottom: 5rem;
+
+  align-items: end;
+}
+
+.section-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+
+  color: var(--rose);
+
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.section-title em {
+  color: var(--rose);
+  font-style: italic;
+}
+
+.section-desc {
+  color: var(--warm-gray);
+  line-height: 1.8;
+}
+
+/* SERVICES */
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  border: 1px solid var(--border);
+}
+
+.service-card {
+  padding: 2.5rem;
+
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+
+  transition: 0.25s;
+}
+
+.service-card:hover {
+  background: var(--rose-light);
+
+  transform: translateY(-6px);
+}
+
+.service-name {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+
+  margin-bottom: 0.75rem;
+}
+
+.service-text {
+  color: var(--warm-gray);
+
+  margin-bottom: 1.5rem;
+}
+
+.service-price {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+}
+
+/* ABOUT */
+
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  min-height: 70vh;
+}
+
+.about-img {
+  position: relative;
+}
+
+.about-right {
+  padding: 6rem 4rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-quote {
+  position: absolute;
+
+  bottom: 3rem;
+  right: 3rem;
+
+  background: var(--charcoal);
+  color: white;
+
+  padding: 1.5rem 2rem;
+
+  max-width: 240px;
+}
+
+.about-stats {
+  display: flex;
+  gap: 3rem;
+
+  margin-top: 3rem;
+}
+
+.about-stat-num {
+  font-family: var(--serif);
+  font-size: 2.5rem;
+
+  color: var(--rose);
+}
+
+/* BOOKING */
+
+.booking {
+  background: var(--charcoal);
+  color: white;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 5rem;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+  background: rgba(255,255,255,0.05);
+
+  border: 1px solid rgba(255,255,255,0.15);
+
+  padding: 0.9rem 1rem;
+
+  color: white;
+}
+
+.btn-submit {
+  background: white;
+  color: var(--charcoal);
+
+  padding: 1rem 2rem;
+
+  border: none;
+
+  margin-top: 1rem;
+}
+
+/* TESTIMONIALS */
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 2rem;
+
+  margin-top: 4rem;
+}
+
+.testi-card {
+  border: 1px solid var(--border);
+
+  padding: 2rem;
+}
+
+.testi-text {
+  font-family: var(--serif);
+  font-style: italic;
+
+  margin-bottom: 1.5rem;
+}
+
+/* CTA */
+
+.cta-section {
+  text-align: center;
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--rose-light) 0%,
+      var(--cream) 100%
+    );
+}
+
+.cta-section p {
+  max-width: 600px;
+
+  margin: 1.5rem auto 2rem;
+
+  color: var(--warm-gray);
+}
+
+/* FOOTER */
+
+footer {
+  background: var(--charcoal);
+  color: white;
+
+  padding: 4rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+
+  gap: 3rem;
+
+  margin-bottom: 4rem;
+}
+
+.footer-logo {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+}
+
+.footer-logo span {
+  color: var(--rose);
+}
+
+.footer-col h4 {
+  margin-bottom: 1rem;
+
+  text-transform: uppercase;
+
+  font-size: 0.75rem;
+
+  opacity: 0.6;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-col a {
+  color: rgba(255,255,255,0.7);
+
+  text-decoration: none;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+
+  padding-top: 2rem;
+
+  display: flex;
+  justify-content: space-between;
+
+  font-size: 0.8rem;
+
+  opacity: 0.5;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Salon <span>Relax</span></a>
+
+  <button class="menu-toggle" id="menuToggle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services">Služby</a></li>
+    <li><a href="#about">O nás</a></li>
+    <li><a href="#rezervace">Ceník</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+
+  <a class="nav-cta" href="#rezervace">Rezervovat</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Kolín – kosmetický salon</div>
+    <h1>Váš čas<br>pro <em>krásu</em><br>a klid</h1>
+    <p class="hero-sub">Profesionální kosmetická péče v příjemném prostředí. Dopřejte si chvíli jen pro sebe – ošetření pleti, manikúra, masáže a mnoho dalšího.</p>
+    <div class="hero-actions">
+      <a href="#rezervace" class="btn-primary">Zarezervovat termín</a>
+      <a href="#services" class="btn-text">Prohlédnout služby</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img
+            src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1600&auto=format&fit=crop"
+            class="hero-bg"
+            alt="Kosmetický salon">
+
+    <div class="hero-badge">
+      <div class="hero-badge-num">10+</div>
+      <div class="hero-badge-label">Let zkušeností</div>
+    </div>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <div class="strip-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+    Ošetření pleti
+  </div>
+  <div class="strip-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+    Manikúra & pedikúra
+  </div>
+  <div class="strip-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    Relaxační masáže
+  </div>
+  <div class="strip-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Depilace
+  </div>
+  <div class="strip-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+    Individuální přístup
+  </div>
+  <div class="strip-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Centrum Kolína
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services fade-section" id="services">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Naše služby</div>
+      <h2 class="section-title">Péče, která<br>se <em>přizpůsobí</em><br>vašim potřebám</h2>
+    </div>
+    <p class="section-desc">Nabízíme komplexní kosmetické služby s důrazem na individuální přístup. Každé ošetření přizpůsobujeme přesně vašemu typu pleti a přáním.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <h3 class="service-name">Kosmetická ošetření</h3>
+      <p class="service-text">Hloubkové čištění, hydratace a regenerace pleti. Používáme prémiové přípravky pro všechny typy pokožky.</p>
+      <div class="service-price">od 500 Kč <span>/ ošetření</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <h3 class="service-name">Manikúra</h3>
+      <p class="service-text">Klasická i gelová manikúra, nail art, oprava gelů. Dokonalá péče o vaše ruce od základu.</p>
+      <div class="service-price">od 350 Kč <span>/ návštěva</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <h3 class="service-name">Pedikúra</h3>
+      <p class="service-text">Klasická pedikúra s péčí o kůžičku, lakování, výživa chodidel. Komfort a relaxace pro unavené nohy.</p>
+      <div class="service-price">od 450 Kč <span>/ návštěva</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <h3 class="service-name">Depilace</h3>
+      <p class="service-text">Šetrná depilace voskem nebo cukrovou pastou. Hedvábně hladká pokožka na týdny dopředu.</p>
+      <div class="service-price">od 150 Kč <span>/ partie</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <h3 class="service-name">Relaxační masáže</h3>
+      <p class="service-text">Uvolňující masáže zad, šíje a celého těla. Zbavte se stresu a napětí pod odborným dotekem.</p>
+      <div class="service-price">od 600 Kč <span>/ 60 min</span></div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <h3 class="service-name">Dárkové poukazy</h3>
+      <p class="service-text">Darujte chvíli relaxace svým blízkým. Poukaz na libovolnou službu nebo částku – ideální dárek.</p>
+      <div class="service-price">dle výběru</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ABOUT -->
+  <section class="about fade-section" id="about">
+    <div class="about-img">
+
+      <img
+              src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=1200&auto=format&fit=crop"
+              class="hero-bg"
+              alt="Kosmetická péče">
+
+      <div class="about-quote">
+        <blockquote>
+          „Každá žena si zaslouží cítit se krásně a výjimečně.“
+        </blockquote>
+      </div>
+
+    </div>
+    <div class="about-right">
+      <div class="section-tag">O salonu</div>
+
+      <h2 class="section-title" style="margin-bottom: 2rem;">
+        Místo, kde se<br>čas <em>zastaví</em>
+      </h2>
+
+      <p>
+        Salon Relax v srdci Kolína provozujeme s láskou k oboru
+        a s upřímnou péčí o každou klientku.
+      </p>
+
+      <p>
+        Pracujeme výhradně s prověřenými kosmetickými přípravky.
+        Každé ošetření začíná konzultací.
+      </p>
+
+      <div class="about-stats">
+        <div>
+          <div class="about-stat-num">500+</div>
+          <div class="about-stat-label">Spokojených klientek</div>
+        </div>
+
+        <div>
+          <div class="about-stat-num">15</div>
+          <div class="about-stat-label">Druhů ošetření</div>
+        </div>
+
+        <div>
+          <div class="about-stat-num">10+</div>
+          <div class="about-stat-label">Let v oboru</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- BOOKING -->
+<section class="booking fade-section" id="rezervace">
+  <div>
+    <div class="section-tag">Rezervace</div>
+    <h2 class="section-title">Zarezervujte si<br>svůj <em>termín</em><br>online</h2>
+    <p>Vyberte si termín, který vám vyhovuje. Potvrzení přijde na váš e-mail obratem. Těšíme se na vás!</p>
+    <a href="tel:+420" class="btn-text" style="color: rgba(250,247,242,0.6); border-color: rgba(250,247,242,0.2);">Nebo zavolejte: +420 XXX XXX XXX</a>
+  </div>
+  <form class="booking-form" onsubmit="return false;">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Jméno</label>
+        <input type="text" placeholder="Jana Nováková">
+      </div>
+      <div class="form-group">
+        <label>Telefon</label>
+        <input type="tel" placeholder="+420 123 456 789">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Služba</label>
+      <select>
+        <option value="">Vyberte službu…</option>
+        <option>Kosmetické ošetření</option>
+        <option>Manikúra</option>
+        <option>Pedikúra</option>
+        <option>Depilace</option>
+        <option>Relaxační masáž</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Datum</label>
+        <input type="date">
+      </div>
+      <div class="form-group">
+        <label>Čas</label>
+        <select>
+          <option>9:00</option><option>9:30</option><option>10:00</option>
+          <option>10:30</option><option>11:00</option><option>14:00</option>
+          <option>14:30</option><option>15:00</option><option>16:00</option>
+          <option>16:30</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-submit" type="submit">Odeslat rezervaci →</button>
+  </form>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+
+  <div style="text-align:center; max-width: 500px; margin: 0 auto;">
+    <div class="section-tag" style="justify-content:center;">Recenze klientek</div>
+    <h2 class="section-title">Co říkají naše<br><em>klientky</em></h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">„Úžasný salon! Vždy odcházím spokojená a odpočatá. Kosmetické ošetření je na profesionální úrovni a příjemná atmosféra dělá z každé návštěvy zážitek."</p>
+      <div class="testi-author"><strong>Lucie M.</strong>Klientka od 2021</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">„Konečně salon, kde se cítím jako doma. Paní je velmi milá, poradí a vysvětlí vše. Manikúra vydrží celé tři týdny. Vřele doporučuji!"</p>
+      <div class="testi-author"><strong>Petra K.</strong>Klientka od 2022</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">„Relaxační masáž byla perfektní. Uvolnila jsem se, jak jsem se neuvolnila roky. Profesionální přístup, krásné prostředí, rozhodně se vrátím."</p>
+      <div class="testi-author"><strong>Markéta V.</strong>Klientka od 2023</div>
+    </div>
+  </div>
+</section>
+<section class="cta-section fade-section">
+  <h2>Dopřejte si chvíli<br>jen pro <em>sebe</em></h2>
+
+  <p>
+    Luxusní péče, profesionální přístup a příjemná atmosféra.
+    Rezervujte si svůj termín ještě dnes.
+  </p>
+
+  <a href="#rezervace" class="btn-primary">
+    Rezervovat termín
+  </a>
+</section>
+<!-- FOOTER -->
+<footer id="kontakt">
+
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Salon <span>Relax</span></div>
+      <p class="footer-tagline">Kosmetický salon v centru Kolína. Vaše krása je naše vášeň.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Služby</h4>
+      <ul>
+        <li><a href="#">Kosmetika</a></li>
+        <li><a href="#">Manikúra</a></li>
+        <li><a href="#">Pedikúra</a></li>
+        <li><a href="#">Depilace</a></li>
+        <li><a href="#">Masáže</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Salon</h4>
+      <ul>
+        <li><a href="#">O nás</a></li>
+        <li><a href="#">Ceník</a></li>
+        <li><a href="#">Dárkové poukazy</a></li>
+        <li><a href="#">Recenze</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Kontakt</h4>
+      <ul>
+        <li><a href="#">Kolín, centrum</a></li>
+        <li><a href="#">+420 XXX XXX XXX</a></li>
+        <li><a href="#">info@relaxkolin.cz</a></li>
+        <li><a href="#">Po–Pá 9:00–18:00</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Salon Relax Kolín. Všechna práva vyhrazena.</span>
+    <span>Navrženo s péčí o detail</span>
+  </div>
+</footer>
+<script>
+  // Navbar shrink
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+
+    if (window.scrollY > 50) {
+      nav.style.padding = '0.8rem 4rem';
+      nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.04)';
+    } else {
+      nav.style.padding = '1.25rem 4rem';
+      nav.style.boxShadow = 'none';
+    }
+  });
+
+  // Mobile menu
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+
+  // Fade sections
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.15
+  });
+
+  document.querySelectorAll('.fade-section').forEach(section => {
+    observer.observe(section);
+  });
+</script>
+
+</body>
+</html>
