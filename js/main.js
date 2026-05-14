@@ -4,12 +4,11 @@ import { getFirestore, collection, doc, getDoc, getDocs, addDoc, query, orderBy,
 
 // ── KONFIGURACE ──
 const FB = {
-  apiKey:            "FIREBASE_API_KEY",
-  authDomain:        "FIREBASE_PROJECT_ID.firebaseapp.com",
-  projectId:         "FIREBASE_PROJECT_ID",
-  storageBucket:     "FIREBASE_PROJECT_ID.appspot.com",
-  messagingSenderId: "FIREBASE_SENDER_ID",
-  appId:             "FIREBASE_APP_ID"
+  apiKey:            "AIzaSyA5K4Fg_8rz2FMm-7-rVvUKFh-x-lQClZM",
+  authDomain:        "koruna-gym.firebaseapp.com",
+  projectId:         "koruna-gym",
+  messagingSenderId: "929249699163",
+  appId:             "1:929249699163:web:5357f7e4147fcbc95ca67e"
 };
 
 const app = initializeApp(FB);
