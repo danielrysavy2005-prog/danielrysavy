@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KORUNA GYM — Administrace</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231a1a1a'/><text x='16' y='24' font-family='Arial' font-weight='900' font-size='16' fill='%23d42b2b' text-anchor='middle'>KG</text></svg>">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sb:#141414;--sb2:#1e1e1e;--red:#d42b2b;--red2:#b82222;
+  --bg:#f0f0f0;--surface:#fff;--border:#e0e0e0;
+  --text:#1a1a1a;--muted:#888;--font:system-ui,-apple-system,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--sb)}
+.login-box{background:var(--sb2);padding:48px 44px;width:100%;max-width:400px;border:1px solid #2a2a2a}
+.login-logo{font-size:1.4rem;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#f0eded;margin-bottom:4px}
+.login-logo em{color:var(--red);font-style:normal}
+.login-sub{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:#444;margin-bottom:32px}
+.lf{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.lf label{font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:#555}
+.lf input{background:rgba(255,255,255,.05);border:1px solid #2a2a2a;padding:11px 13px;color:#f0eded;font-family:var(--font);font-size:.9rem;outline:none;transition:border-color .2s}
+.lf input:focus{border-color:var(--red)}
+.login-btn{width:100%;padding:12px;background:var(--red);color:#fff;border:none;font-family:var(--font);font-size:.76rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:background .2s}
+.login-btn:hover{background:var(--red2)}
+.login-err{font-size:.82rem;color:#f87171;margin-top:10px;text-align:center;min-height:18px}
+
+/* LAYOUT */
+#app{display:flex;min-height:100vh}
+aside{width:232px;flex-shrink:0;background:var(--sb);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50}
+.sb-logo{padding:22px 20px 18px;border-bottom:1px solid #222}
+.sb-logo-text{font-size:1.05rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:#f0eded}
+.sb-logo-text em{color:var(--red);font-style:normal}
+.sb-logo-sub{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:#444;margin-top:2px}
+.sb-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:3px}
+.sb-link{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:6px;font-size:.84rem;font-weight:500;color:#777;cursor:pointer;border:none;background:none;text-align:left;width:100%;transition:background .15s,color .15s}
+.sb-link:hover{background:#1e1e1e;color:#ddd}
+.sb-link.active{background:rgba(212,43,43,.15);color:var(--red)}
+.sb-link svg{width:17px;height:17px;flex-shrink:0}
+.sb-bottom{padding:14px 10px;border-top:1px solid #222}
+.sb-user{font-size:.72rem;color:#444;margin-bottom:8px;padding:0 4px}
+.sb-logout{display:flex;align-items:center;gap:8px;padding:9px 13px;width:100%;background:none;border:1px solid #2a2a2a;border-radius:6px;font-family:var(--font);font-size:.76rem;color:#555;cursor:pointer;transition:border-color .2s,color .2s}
+.sb-logout:hover{border-color:var(--red);color:var(--red)}
+.sb-logout svg{width:15px;height:15px}
+
+/* CONTENT */
+#content{margin-left:232px;flex:1;padding:30px 34px;min-height:100vh}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.page-title{font-size:1.45rem;font-weight:700;margin-bottom:3px}
+.page-sub{font-size:.84rem;color:var(--muted);margin-bottom:26px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:18px}
+.card-title{font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:6px;font-family:var(--font);font-size:.8rem;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:var(--red2)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:#aaa}
+.btn-sm{padding:5px 12px;font-size:.74rem}
+.btn-danger{background:transparent;border:1px solid #fca5a5;color:#dc2626}.btn-danger:hover{background:#fee2e2}
+.btn svg{width:14px;height:14px}
+
+/* FORMS */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fg label{font-size:.76rem;font-weight:600}
+.fg input,.fg textarea,.fg select{padding:9px 11px;border:1px solid var(--border);border-radius:6px;font-family:var(--font);font-size:.87rem;color:var(--text);background:var(--surface);outline:none;transition:border-color .2s}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(212,43,43,.07)}
+.fg textarea{resize:vertical;min-height:110px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.tl-label{font-size:.9rem;font-weight:500}
+.tl-desc{font-size:.76rem;color:var(--muted);margin-top:2px}
+.toggle{position:relative;width:42px;height:23px;background:#ddd;border-radius:12px;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--red)}
+.toggle::after{content:'';position:absolute;width:17px;height:17px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle.on::after{transform:translateX(19px)}
+
+/* GALLERY */
+.upload-zone{border:2px dashed var(--border);border-radius:10px;padding:36px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:20px}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--red);background:rgba(212,43,43,.03)}
+.upload-zone svg{color:#ccc;margin-bottom:10px}
+.upload-zone p{font-size:.86rem;color:var(--muted)}
+.upload-zone span{color:var(--red);font-weight:600}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.gal-item{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.gal-item img{width:100%;height:100%;object-fit:cover}
+.gal-del{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .15s}
+.gal-item:hover .gal-del{opacity:1}
+.gal-del svg{width:13px;height:13px}
+#gal-file{display:none}
+
+/* NEWS */
+.news-list{display:flex;flex-direction:column;gap:9px}
+.ni{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;gap:10px}
+.ni-left{flex:1;min-width:0}
+.ni-title{font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ni-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
+.badge{font-size:.66rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:20px;flex-shrink:0}
+.badge-green{background:#dcfce7;color:#16a34a}
+.badge-gray{background:#f0f0f0;color:#888}
+.ni-actions{display:flex;gap:7px;flex-shrink:0}
+#news-editor{display:none}
+#news-editor.open{display:block}
+
+/* MAILER */
+.sub-list{display:flex;flex-direction:column;gap:7px;max-height:260px;overflow-y:auto}
+.si{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:6px;font-size:.84rem;gap:8px}
+.si-email{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.si-date{font-size:.72rem;color:var(--muted);flex-shrink:0}
+.si-del{background:none;border:none;cursor:pointer;color:#ccc;padding:3px;transition:color .15s;flex-shrink:0}
+.si-del:hover{color:#dc2626}
+.si-del svg{width:14px;height:14px;display:block}
+.progress-wrap{height:5px;background:#eee;border-radius:3px;overflow:hidden;margin:8px 0}
+.progress-bar{height:100%;background:var(--red);border-radius:3px;transition:width .3s;width:0%}
+.progress-txt{font-size:.76rem;color:var(--muted)}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.sc-num{font-size:1.9rem;font-weight:700;color:var(--red);line-height:1}
+.sc-label{font-size:.72rem;color:var(--muted);margin-top:4px}
+
+/* ALERTS */
+.alert{padding:11px 14px;border-radius:7px;font-size:.84rem;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.alert-ok{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.alert-err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.alert svg{width:15px;height:15px;flex-shrink:0}
+
+/* SPINNER */
+.spin{width:18px;height:18px;border:2px solid #ddd;border-top-color:var(--red);border-radius:50%;animation:sp .6s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading{color:var(--muted);font-size:.86rem;display:flex;align-items:center;gap:9px;padding:16px 0}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><em>K</em>ORUNA GYM</div>
+    <div class="login-sub">Administrace</div>
+    <div class="lf"><label>E-mail</label><input type="email" id="l-email" placeholder="admin@korunagym.cz" autocomplete="email"></div>
+    <div class="lf"><label>Heslo</label><input type="password" id="l-pass" placeholder="••••••••" autocomplete="current-password"></div>
+    <button class="login-btn" id="l-btn">Přihlásit se</button>
+    <div class="login-err" id="l-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <aside>
+    <div class="sb-logo">
+      <div class="sb-logo-text"><em>K</em>ORUNA GYM</div>
+      <div class="sb-logo-sub">Administrace</div>
+    </div>
+    <nav class="sb-nav">
+      <button class="sb-link active" data-tab="dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Přehled
+      </button>
+      <button class="sb-link" data-tab="gallery">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Fotogalerie
+      </button>
+      <button class="sb-link" data-tab="news">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Aktuality
+      </button>
+      <button class="sb-link" data-tab="popup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Popup
+      </button>
+      <button class="sb-link" data-tab="mailer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Mailer
+      </button>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-user" id="sb-email"></div>
+      <button class="sb-logout" id="logout-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Odhlásit se
+      </button>
+    </div>
+  </aside>
+
+  <div id="content">
+
+    <!-- DASHBOARD -->
+    <div class="tab-panel active" id="tab-dash">
+      <div class="page-title">Přehled</div>
+      <div class="page-sub">KORUNA GYM — správa obsahu webu</div>
+      <div class="stats-row">
+        <div class="sc"><div class="sc-num" id="s-photos">—</div><div class="sc-label">Fotek v galerii</div></div>
+        <div class="sc"><div class="sc-num" id="s-news">—</div><div class="sc-label">Publikovaných aktualit</div></div>
+        <div class="sc"><div class="sc-num" id="s-subs">—</div><div class="sc-label">Odběratelů</div></div>
+        <div class="sc"><div class="sc-num" id="s-popup">—</div><div class="sc-label">Popup</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rychlé akce</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-red" onclick="goTab('gallery')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Přidat fotku</button>
+          <button class="btn btn-outline" onclick="goTab('news');openEditor()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nová aktualita</button>
+          <button class="btn btn-outline" onclick="goTab('popup')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Upravit popup</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="tab-panel" id="tab-gallery">
+      <div class="page-title">Fotogalerie</div>
+      <div class="page-sub">Nahrávejte a spravujte fotky zobrazené na webu</div>
+      <div id="gal-alert"></div>
+      <div class="card">
+        <div class="upload-zone" id="upload-zone">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>Přetáhněte fotky sem nebo <span>klikněte pro výběr</span></p>
+          <p style="font-size:.74rem;margin-top:5px">JPG, PNG, WEBP — max. 5 MB</p>
+          <input type="file" id="gal-file" multiple accept="image/*">
+        </div>
+        <div id="gal-loading" class="loading" style="display:none"><div class="spin"></div>Načítám galerii…</div>
+        <div class="gallery-grid" id="gallery-grid"></div>
+      </div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="tab-panel" id="tab-news">
+      <div class="page-title">Aktuality</div>
+      <div class="page-sub">Příspěvky zobrazené v sekci Aktuality na webu</div>
+      <div id="news-alert"></div>
+      <div class="card" id="news-editor">
+        <div class="card-title">
+          <span id="ed-label">Nová aktualita</span>
+          <button class="btn btn-sm btn-outline" onclick="closeEditor()">Zrušit</button>
+        </div>
+        <input type="hidden" id="ed-id">
+        <div class="fg"><label>Nadpis</label><input type="text" id="ed-title" placeholder="Název aktuality"></div>
+        <div class="fg"><label>Perex (krátký popis)</label><input type="text" id="ed-perex" placeholder="Zobrazí se v přehledu aktualit"></div>
+        <div class="fg"><label>Text</label><textarea id="ed-body" placeholder="Celý text aktuality…"></textarea></div>
+        <div class="form-row">
+          <div class="fg"><label>Datum</label><input type="date" id="ed-date"></div>
+          <div class="fg"><label>Stav</label><select id="ed-status"><option value="published">Publikováno</option><option value="draft">Koncept</option></select></div>
+        </div>
+        <button class="btn btn-red" onclick="saveNews()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>Uložit</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Příspěvky<button class="btn btn-sm btn-red" onclick="openEditor()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nová</button></div>
+        <div id="news-loading" class="loading" style="display:none"><div class="spin"></div>Načítám…</div>
+        <div class="news-list" id="news-list"></div>
+      </div>
+    </div>
+
+    <!-- POPUP -->
+    <div class="tab-panel" id="tab-popup">
+      <div class="page-title">Popup</div>
+      <div class="page-sub">Vyskakovací okno zobrazované návštěvníkům webu</div>
+      <div id="popup-alert"></div>
+      <div class="card">
+        <div class="toggle-row">
+          <div><div class="tl-label">Zobrazit popup</div><div class="tl-desc">Popup se zobrazí každému návštěvníkovi jednou za nastavený počet dní</div></div>
+          <div class="toggle" id="popup-toggle"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Obsah</div>
+        <div class="fg"><label>Nadpis</label><input type="text" id="pu-title" placeholder="Např. Akce měsíce — 20% sleva!"></div>
+        <div class="fg"><label>Text</label><textarea id="pu-body" placeholder="Popis akce nebo sdělení…" style="min-height:90px"></textarea></div>
+        <div class="form-row">
+          <div class="fg"><label>Text tlačítka</label><input type="text" id="pu-cta-text" placeholder="Chci využít akci"></div>
+          <div class="fg"><label>Odkaz tlačítka</label><input type="text" id="pu-cta-url" placeholder="#cenik"></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label>URL obrázku (volitelné)</label><input type="text" id="pu-img" placeholder="https://…"></div>
+          <div class="fg"><label>Skrýt po (dnů)</label><input type="number" id="pu-days" value="7" min="1" max="365"></div>
+        </div>
+        <button class="btn btn-red" onclick="savePopup()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>Uložit nastavení</button>
+      </div>
+    </div>
+
+    <!-- MAILER -->
+    <div class="tab-panel" id="tab-mailer">
+      <div class="page-title">Mailer</div>
+      <div class="page-sub">Odběratelé newsletteru a hromadné e-maily</div>
+      <div id="mail-alert"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+        <div class="card">
+          <div class="card-title">Odběratelé <span id="sub-count" style="font-size:.76rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0"></span></div>
+          <div id="sub-loading" class="loading" style="display:none"><div class="spin"></div>Načítám…</div>
+          <div class="sub-list" id="sub-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Nový e-mail</div>
+          <div class="fg"><label>Předmět</label><input type="text" id="m-subject" placeholder="KORUNA GYM — Novinka"></div>
+          <div class="fg"><label>Zpráva</label><textarea id="m-body" placeholder="Text e-mailu…"></textarea></div>
+          <button class="btn btn-red" id="m-send-btn" onclick="sendMail()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Odeslat všem odběratelům</button>
+          <div id="mail-progress" style="display:none;margin-top:10px">
+            <div class="progress-wrap"><div class="progress-bar" id="m-bar"></div></div>
+            <div class="progress-txt" id="m-txt"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
+  deleteDoc, updateDoc, query, orderBy, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
+
+// ══════════════════════════════════════════════════════
+//  KONFIGURACE — doplňte hodnoty z Firebase Console
+//  a z emailjs.com
+// ══════════════════════════════════════════════════════
+const FB = {
+  apiKey:            "FIREBASE_API_KEY",
+  authDomain:        "FIREBASE_PROJECT_ID.firebaseapp.com",
+  projectId:         "FIREBASE_PROJECT_ID",
+  storageBucket:     "FIREBASE_PROJECT_ID.appspot.com",
+  messagingSenderId: "FIREBASE_SENDER_ID",
+  appId:             "FIREBASE_APP_ID"
+};
+const EJS = {
+  publicKey:   "EMAILJS_PUBLIC_KEY",
+  serviceId:   "EMAILJS_SERVICE_ID",
+  templateId:  "EMAILJS_TEMPLATE_ID",
+};
+// ══════════════════════════════════════════════════════
+
+const app  = initializeApp(FB);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const st   = getStorage(app);
+emailjs.init(EJS.publicKey);
+
+// ── AUTH ──
+onAuthStateChanged(auth, u => {
+  if (u) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    document.getElementById('sb-email').textContent = u.email;
+    loadAll();
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+  }
+});
+
+const loginHandler = async () => {
+  const email = document.getElementById('l-email').value.trim();
+  const pass  = document.getElementById('l-pass').value;
+  document.getElementById('l-err').textContent = '';
+  try { await signInWithEmailAndPassword(auth, email, pass); }
+  catch { document.getElementById('l-err').textContent = 'Nesprávné přihlašovací údaje.'; }
+};
+document.getElementById('l-btn').addEventListener('click', loginHandler);
+document.getElementById('l-pass').addEventListener('keydown', e => e.key==='Enter' && loginHandler());
+document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+
+// ── TABS ──
+window.goTab = function(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+};
+document.querySelectorAll('.sb-link').forEach(b => b.addEventListener('click', () => goTab(b.dataset.tab)));
+
+async function loadAll() {
+  await Promise.all([loadGallery(), loadNews(), loadPopup(), loadSubs()]);
+  updateDash();
+}
+
+// ── GALLERY ──
+let photos = [];
+
+async function loadGallery() {
+  document.getElementById('gal-loading').style.display = 'flex';
+  const snap = await getDocs(query(collection(db,'gallery'), orderBy('createdAt','desc')));
+  photos = snap.docs.map(d => ({id:d.id,...d.data()}));
+  renderGallery();
+  document.getElementById('gal-loading').style.display = 'none';
+}
+
+function renderGallery() {
+  document.getElementById('gallery-grid').innerHTML = photos.map(p => `
+    <div class="gal-item">
+      <img src="${p.url}" alt="">
+      <button class="gal-del" onclick="delPhoto('${p.id}','${p.path}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+const zone = document.getElementById('upload-zone');
+const fi   = document.getElementById('gal-file');
+zone.addEventListener('click', () => fi.click());
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag'); uploadFiles(e.dataTransfer.files); });
+fi.addEventListener('change', () => uploadFiles(fi.files));
+
+async function uploadFiles(files) {
+  for (const f of files) {
+    if (f.size > 5*1024*1024) { alert2('gal-alert','err',`${f.name} je příliš velký (max 5 MB).`); continue; }
+    const path = `gallery/${Date.now()}_${f.name}`;
+    await uploadBytes(ref(st, path), f);
+    const url = await getDownloadURL(ref(st, path));
+    const r2 = await addDoc(collection(db,'gallery'), {url, path, name:f.name, createdAt:serverTimestamp()});
+    photos.unshift({id:r2.id, url, path, name:f.name});
+    renderGallery();
+  }
+  alert2('gal-alert','ok','Fotky nahrány.'); updateDash(); fi.value='';
+}
+
+window.delPhoto = async (id, path) => {
+  if (!confirm('Smazat fotku?')) return;
+  try { await deleteObject(ref(st, path)); } catch {}
+  await deleteDoc(doc(db,'gallery',id));
+  photos = photos.filter(p => p.id !== id);
+  renderGallery(); updateDash();
+  alert2('gal-alert','ok','Fotka smazána.');
+};
+
+// ── NEWS ──
+let articles = [];
+
+async function loadNews() {
+  document.getElementById('news-loading').style.display = 'flex';
+  const snap = await getDocs(query(collection(db,'news'), orderBy('date','desc')));
+  articles = snap.docs.map(d => ({id:d.id,...d.data()}));
+  renderNews();
+  document.getElementById('news-loading').style.display = 'none';
+}
+
+function renderNews() {
+  const el = document.getElementById('news-list');
+  if (!articles.length) { el.innerHTML = '<div style="color:var(--muted);font-size:.84rem;padding:10px 0">Žádné aktuality.</div>'; return; }
+  el.innerHTML = articles.map(a => `
+    <div class="ni">
+      <div class="ni-left"><div class="ni-title">${a.title}</div><div class="ni-meta">${a.date||''}</div></div>
+      <span class="badge ${a.status==='published'?'badge-green':'badge-gray'}">${a.status==='published'?'Publikováno':'Koncept'}</span>
+      <div class="ni-actions">
+        <button class="btn btn-sm btn-outline" onclick="editNews('${a.id}')">Upravit</button>
+        <button class="btn btn-sm btn-danger" onclick="delNews('${a.id}')">Smazat</button>
+      </div>
+    </div>`).join('');
+}
+
+window.openEditor = function() {
+  const ed = document.getElementById('news-editor');
+  ed.classList.add('open');
+  document.getElementById('ed-id').value = '';
+  document.getElementById('ed-title').value = '';
+  document.getElementById('ed-perex').value = '';
+  document.getElementById('ed-body').value = '';
+  document.getElementById('ed-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('ed-status').value = 'published';
+  document.getElementById('ed-label').textContent = 'Nová aktualita';
+  ed.scrollIntoView({behavior:'smooth'});
+};
+
+window.closeEditor = () => document.getElementById('news-editor').classList.remove('open');
+
+window.editNews = function(id) {
+  const a = articles.find(x => x.id===id); if (!a) return;
+  document.getElementById('ed-id').value = id;
+  document.getElementById('ed-title').value = a.title||'';
+  document.getElementById('ed-perex').value = a.perex||'';
+  document.getElementById('ed-body').value = a.body||'';
+  document.getElementById('ed-date').value = a.date||'';
+  document.getElementById('ed-status').value = a.status||'published';
+  document.getElementById('ed-label').textContent = 'Upravit aktualitu';
+  const ed = document.getElementById('news-editor');
+  ed.classList.add('open'); ed.scrollIntoView({behavior:'smooth'});
+};
+
+window.saveNews = async function() {
+  const id = document.getElementById('ed-id').value;
+  const data = {
+    title:  document.getElementById('ed-title').value.trim(),
+    perex:  document.getElementById('ed-perex').value.trim(),
+    body:   document.getElementById('ed-body').value.trim(),
+    date:   document.getElementById('ed-date').value,
+    status: document.getElementById('ed-status').value,
+    updatedAt: serverTimestamp()
+  };
+  if (!data.title) { alert2('news-alert','err','Vyplňte nadpis.'); return; }
+  if (id) {
+    await updateDoc(doc(db,'news',id), data);
+    const i = articles.findIndex(x => x.id===id);
+    if (i!==-1) articles[i] = {id,...data};
+  } else {
+    const r = await addDoc(collection(db,'news'), {...data, createdAt:serverTimestamp()});
+    articles.unshift({id:r.id,...data});
+  }
+  renderNews(); closeEditor(); updateDash();
+  alert2('news-alert','ok','Aktualita uložena.');
+};
+
+window.delNews = async function(id) {
+  if (!confirm('Smazat tuto aktualitu?')) return;
+  await deleteDoc(doc(db,'news',id));
+  articles = articles.filter(a => a.id!==id);
+  renderNews(); updateDash();
+};
+
+// ── POPUP ──
+let popEnabled = false;
+
+async function loadPopup() {
+  const snap = await getDoc(doc(db,'settings','popup'));
+  if (snap.exists()) {
+    const d = snap.data();
+    popEnabled = !!d.enabled;
+    document.getElementById('pu-title').value    = d.title   ||'';
+    document.getElementById('pu-body').value     = d.body    ||'';
+    document.getElementById('pu-cta-text').value = d.ctaText ||'';
+    document.getElementById('pu-cta-url').value  = d.ctaUrl  ||'';
+    document.getElementById('pu-img').value      = d.imgUrl  ||'';
+    document.getElementById('pu-days').value     = d.days    ||7;
+  }
+  syncToggle();
+}
+
+function syncToggle() {
+  document.getElementById('popup-toggle').classList.toggle('on', popEnabled);
+  document.getElementById('s-popup').textContent = popEnabled ? 'ZAP' : 'VYP';
+}
+document.getElementById('popup-toggle').addEventListener('click', () => { popEnabled=!popEnabled; syncToggle(); });
+
+window.savePopup = async function() {
+  await setDoc(doc(db,'settings','popup'), {
+    enabled: popEnabled,
+    title:   document.getElementById('pu-title').value.trim(),
+    body:    document.getElementById('pu-body').value.trim(),
+    ctaText: document.getElementById('pu-cta-text').value.trim(),
+    ctaUrl:  document.getElementById('pu-cta-url').value.trim(),
+    imgUrl:  document.getElementById('pu-img').value.trim(),
+    days:    parseInt(document.getElementById('pu-days').value)||7,
+  });
+  alert2('popup-alert','ok','Nastavení popupu uloženo.');
+};
+
+// ── SUBSCRIBERS ──
+let subs = [];
+
+async function loadSubs() {
+  document.getElementById('sub-loading').style.display = 'flex';
+  const snap = await getDocs(query(collection(db,'subscribers'), orderBy('createdAt','desc')));
+  subs = snap.docs.map(d => ({id:d.id,...d.data()}));
+  renderSubs();
+  document.getElementById('sub-loading').style.display = 'none';
+}
+
+function renderSubs() {
+  document.getElementById('sub-count').textContent = subs.length+' odběratelů';
+  const el = document.getElementById('sub-list');
+  if (!subs.length) { el.innerHTML = '<div style="color:var(--muted);font-size:.84rem;padding:8px 0">Zatím žádní odběratelé.</div>'; return; }
+  el.innerHTML = subs.map(s => `
+    <div class="si">
+      <span class="si-email">${s.email}</span>
+      <span class="si-date">${s.createdAt?.toDate?s.createdAt.toDate().toLocaleDateString('cs'):''}</span>
+      <button class="si-del" onclick="delSub('${s.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>`).join('');
+}
+
+window.delSub = async function(id) {
+  if (!confirm('Odebrat odběratele?')) return;
+  await deleteDoc(doc(db,'subscribers',id));
+  subs = subs.filter(s => s.id!==id);
+  renderSubs(); updateDash();
+};
+
+// ── SEND MAIL ──
+window.sendMail = async function() {
+  const subject = document.getElementById('m-subject').value.trim();
+  const body    = document.getElementById('m-body').value.trim();
+  if (!subject||!body) { alert2('mail-alert','err','Vyplňte předmět i text.'); return; }
+  if (!subs.length)    { alert2('mail-alert','err','Žádní odběratelé.'); return; }
+
+  const btn = document.getElementById('m-send-btn');
+  const prog = document.getElementById('mail-progress');
+  const bar  = document.getElementById('m-bar');
+  const txt  = document.getElementById('m-txt');
+  btn.disabled = true; prog.style.display = 'block';
+
+  let sent=0, failed=0;
+  for (const s of subs) {
+    try {
+      await emailjs.send(EJS.serviceId, EJS.templateId, {
+        to_email: s.email, subject, message: body, gym_name: 'KORUNA GYM Kolín'
+      });
+      sent++;
+    } catch { failed++; }
+    const pct = Math.round(((sent+failed)/subs.length)*100);
+    bar.style.width = pct+'%';
+    txt.textContent = `Odesláno ${sent+failed} / ${subs.length}…`;
+    await new Promise(r => setTimeout(r,150));
+  }
+  btn.disabled = false; prog.style.display = 'none'; bar.style.width='0%';
+  alert2('mail-alert', failed?'err':'ok', failed?`Odesláno ${sent}, selhalo ${failed}.`:`Úspěšně odesláno ${sent} e-mailů.`);
+};
+
+// ── DASHBOARD ──
+function updateDash() {
+  document.getElementById('s-photos').textContent = photos.length;
+  document.getElementById('s-news').textContent   = articles.filter(a=>a.status==='published').length;
+  document.getElementById('s-subs').textContent   = subs.length;
+}
+
+// ── HELPERS ──
+function alert2(id, type, msg) {
+  const icon = type==='ok'
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+  const el = document.getElementById(id);
+  el.innerHTML = `<div class="alert alert-${type==='ok'?'ok':'err'}">${icon}${msg}</div>`;
+  setTimeout(()=>{ if(el) el.innerHTML=''; }, 4000);
+}
+</script>
+</body>
+</html>

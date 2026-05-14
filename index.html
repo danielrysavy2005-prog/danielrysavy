@@ -485,6 +485,69 @@ footer {
   color: rgba(250,247,242,0.3);
 }
 
+/* ─── POPUP ─── */
+.popup-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(44,40,37,.65);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+.popup-overlay.open { opacity: 1; pointer-events: all; }
+.popup-box {
+  background: var(--cream); max-width: 460px; width: 100%;
+  position: relative; overflow: hidden;
+  transform: translateY(20px); transition: transform .3s;
+}
+.popup-overlay.open .popup-box { transform: none; }
+.popup-box img { width: 100%; height: 190px; object-fit: cover; display: block; }
+.popup-inner { padding: 30px 32px 28px; }
+.popup-close {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(44,40,37,.55); color: white;
+  border: none; border-radius: 50%; width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 2;
+}
+.popup-close svg { width: 14px; height: 14px; }
+.popup-tag { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--rose); margin-bottom: .75rem; }
+.popup-title { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; margin-bottom: .75rem; }
+.popup-body  { font-size: .88rem; color: var(--warm-gray); line-height: 1.75; margin-bottom: 1.5rem; }
+
+/* ─── GALLERY DYNAMIC ─── */
+.dyn-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 6px; }
+.dyn-gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; transition: transform .3s; }
+.dyn-gallery img:hover { transform: scale(1.04); }
+
+/* ─── NEWS CARDS ─── */
+.news-cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 18px; margin-top: 2.5rem; }
+.nc { border: .5px solid var(--border); padding: 26px; transition: transform .25s, box-shadow .25s; }
+.nc:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(201,137,122,.1); }
+.nc-date { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); margin-bottom: .6rem; }
+.nc-title { font-family: var(--serif); font-size: 1.25rem; margin-bottom: .6rem; }
+.nc-perex { font-size: .87rem; color: var(--warm-gray); line-height: 1.7; }
+
+/* ─── NEWSLETTER ─── */
+.newsletter-form {
+  display: flex; gap: 0; margin-top: 1.25rem; max-width: 320px;
+}
+.newsletter-form input {
+  flex: 1; padding: .75rem 1rem;
+  border: .5px solid rgba(250,247,242,.15); background: rgba(255,255,255,.06);
+  color: white; font-family: var(--sans); font-size: .85rem; outline: none;
+  transition: border-color .2s;
+}
+.newsletter-form input::placeholder { color: rgba(255,255,255,.3); }
+.newsletter-form input:focus { border-color: var(--rose); }
+.newsletter-form button {
+  padding: .75rem 1.2rem; background: var(--rose); color: white;
+  border: none; cursor: pointer; font-family: var(--sans); font-size: .78rem;
+  font-weight: 600; transition: background .2s; white-space: nowrap;
+}
+.newsletter-form button:hover { background: var(--rose-dark); }
+.nl-ok { font-size: .8rem; color: var(--sage); margin-top: .6rem; display: none; }
+
 /* ─── SCROLL REVEAL ─── */
 .r {
   opacity: 0;
@@ -500,6 +563,7 @@ footer {
 }
 
 /* ─── RESPONSIVE ─── */
+@media (max-width: 600px) { .newsletter-form { flex-direction: column; } }
 @media (max-width: 980px) {
   nav { padding: 0 1.5rem; }
   .nav-links, .nav-cta { display: none; }
@@ -562,6 +626,22 @@ footer {
     <li><a href="#kontakt" onclick="closeMob()">Kontakt <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a></li>
     <li><a href="#rezervace" class="mob-cta" onclick="closeMob()">Rezervovat termín <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></a></li>
   </ul>
+</div>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box" id="popup-box">
+    <button class="popup-close" onclick="closePopup()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img id="popup-img" src="" alt="" style="display:none">
+    <div class="popup-inner">
+      <p class="popup-tag">Aktualita</p>
+      <h2 class="popup-title" id="popup-title"></h2>
+      <p class="popup-body" id="popup-body"></p>
+      <a href="#" id="popup-cta" class="btn-primary" style="display:inline-block"></a>
+    </div>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -756,6 +836,32 @@ footer {
   </form>
 </section>
 
+<!-- GALLERY -->
+<section class="s-wrap r" id="galerie">
+  <div class="s-header">
+    <div>
+      <p class="s-tag">Fotogalerie</p>
+      <h2 class="s-title">Prostředí<br>našeho <em>salonu</em></h2>
+    </div>
+  </div>
+  <div class="dyn-gallery" id="dyn-gallery">
+    <div style="color:var(--warm-gray);font-size:.88rem;padding:1rem 0">Načítám galerii…</div>
+  </div>
+</section>
+
+<!-- AKTUALITY -->
+<section class="s-wrap r" style="background:var(--cream-dark)" id="aktuality">
+  <div class="s-header">
+    <div>
+      <p class="s-tag">Aktuality</p>
+      <h2 class="s-title">Co je<br>u nás <em>nového</em></h2>
+    </div>
+  </div>
+  <div class="news-cards" id="news-cards">
+    <div style="color:var(--warm-gray);font-size:.88rem">Načítám aktuality…</div>
+  </div>
+</section>
+
 <!-- TESTIMONIALS -->
 <section class="testimonials r">
   <div class="testi-header">
@@ -804,6 +910,11 @@ footer {
     <div>
       <div class="footer-logo">Salon <em>Relax</em></div>
       <p class="footer-tagline">Kosmetický salon v centru Kolína. Vaše krása je naše vášeň. Těšíme se na vaši návštěvu.</p>
+      <form class="newsletter-form" id="nl-form" onsubmit="return subscribeNewsletter(event)">
+        <input type="email" id="nl-email" placeholder="Váš e-mail" required>
+        <button type="submit">Odebírat</button>
+      </form>
+      <div class="nl-ok" id="nl-ok">Přihlášení k odběru proběhlo úspěšně.</div>
     </div>
     <div class="footer-col">
       <h4>Služby</h4>
@@ -840,6 +951,113 @@ footer {
     <span>Navrženo s péčí o detail</span>
   </div>
 </footer>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, query, orderBy, where, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ── STEJNÁ KONFIGURACE JAKO V admin.html ──
+const FB = {
+  apiKey:            "FIREBASE_API_KEY",
+  authDomain:        "FIREBASE_PROJECT_ID.firebaseapp.com",
+  projectId:         "FIREBASE_PROJECT_ID",
+  storageBucket:     "FIREBASE_PROJECT_ID.appspot.com",
+  messagingSenderId: "FIREBASE_SENDER_ID",
+  appId:             "FIREBASE_APP_ID"
+};
+
+const app = initializeApp(FB);
+const db  = getFirestore(app);
+
+// ── GALLERY ──
+(async () => {
+  const el = document.getElementById('dyn-gallery');
+  try {
+    const snap = await getDocs(query(collection(db,'gallery'), orderBy('createdAt','desc')));
+    if (snap.empty) { el.innerHTML = '<div style="color:var(--warm-gray);font-size:.88rem">Galerie bude brzy doplněna.</div>'; return; }
+    el.innerHTML = snap.docs.map(d => {
+      const {url, name} = d.data();
+      return `<img src="${url}" alt="${name||''}" loading="lazy">`;
+    }).join('');
+  } catch { el.innerHTML = ''; }
+})();
+
+// ── AKTUALITY ──
+(async () => {
+  const el = document.getElementById('news-cards');
+  try {
+    const snap = await getDocs(query(
+      collection(db,'news'),
+      where('status','==','published'),
+      orderBy('date','desc')
+    ));
+    if (snap.empty) { el.innerHTML = '<div style="color:var(--warm-gray);font-size:.88rem">Aktuality připravujeme.</div>'; return; }
+    el.innerHTML = snap.docs.map(d => {
+      const {title, perex, date} = d.data();
+      return `<div class="nc r">
+        <div class="nc-date">${date||''}</div>
+        <h3 class="nc-title">${title}</h3>
+        <p class="nc-perex">${perex||''}</p>
+      </div>`;
+    }).join('');
+    // trigger scroll reveal for dynamically added elements
+    document.querySelectorAll('.nc.r').forEach(el => obs.observe(el));
+  } catch { el.innerHTML = ''; }
+})();
+
+// ── POPUP ──
+(async () => {
+  try {
+    const snap = await getDoc(doc(db,'settings','popup'));
+    if (!snap.exists()) return;
+    const d = snap.data();
+    if (!d.enabled) return;
+    const key = 'popup_seen';
+    const lastSeen = localStorage.getItem(key);
+    const days = d.days || 7;
+    if (lastSeen && (Date.now() - Number(lastSeen)) < days * 86400000) return;
+    // fill popup
+    document.getElementById('popup-title').textContent = d.title || '';
+    document.getElementById('popup-body').textContent  = d.body  || '';
+    if (d.ctaText && d.ctaUrl) {
+      const cta = document.getElementById('popup-cta');
+      cta.textContent = d.ctaText;
+      cta.href = d.ctaUrl;
+    } else {
+      document.getElementById('popup-cta').style.display = 'none';
+    }
+    if (d.imgUrl) {
+      const img = document.getElementById('popup-img');
+      img.src = d.imgUrl;
+      img.style.display = 'block';
+    }
+    setTimeout(() => document.getElementById('popup-overlay').classList.add('open'), 1800);
+    localStorage.setItem(key, Date.now());
+  } catch {}
+})();
+
+window.closePopup = function() {
+  document.getElementById('popup-overlay').classList.remove('open');
+};
+document.getElementById('popup-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('popup-overlay')) closePopup();
+});
+
+// ── NEWSLETTER ──
+window.subscribeNewsletter = async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('nl-email').value.trim();
+  if (!email) return false;
+  try {
+    await addDoc(collection(db,'subscribers'), { email, createdAt: serverTimestamp() });
+    document.getElementById('nl-form').style.display = 'none';
+    const ok = document.getElementById('nl-ok');
+    ok.style.display = 'block';
+  } catch { alert('Nepodařilo se přihlásit k odběru. Zkuste to prosím znovu.'); }
+  return false;
+};
+</script>
 
 <script>
   // Nav scroll shadow
