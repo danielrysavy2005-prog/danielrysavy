@@ -36,19 +36,6 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.08 });
 document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
-// ── GALLERY ──
-(async () => {
-  const el = document.getElementById('dyn-gallery');
-  try {
-    const snap = await getDocs(query(collection(db,'gallery'), orderBy('createdAt','desc')));
-    if (snap.empty) { el.innerHTML = '<div style="color:var(--warm-gray);font-size:.88rem">Galerie bude brzy doplněna.</div>'; return; }
-    el.innerHTML = snap.docs.map(d => {
-      const {url, name} = d.data();
-      return `<img src="${url}" alt="${name||''}" loading="lazy">`;
-    }).join('');
-  } catch { el.innerHTML = ''; }
-})();
-
 // ── AKTUALITY ──
 (async () => {
   const el = document.getElementById('news-cards');
