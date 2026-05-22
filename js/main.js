@@ -59,43 +59,6 @@ document.querySelectorAll('.r').forEach(el => obs.observe(el));
   } catch { el.innerHTML = ''; }
 })();
 
-// ── POPUP ──
-(async () => {
-  try {
-    const snap = await getDoc(doc(db,'settings','popup'));
-    if (!snap.exists()) return;
-    const d = snap.data();
-    if (!d.enabled) return;
-    const key = 'popup_seen';
-    const lastSeen = localStorage.getItem(key);
-    const days = d.days || 7;
-    if (lastSeen && (Date.now() - Number(lastSeen)) < days * 86400000) return;
-    document.getElementById('popup-title').textContent = d.title || '';
-    document.getElementById('popup-body').textContent  = d.body  || '';
-    if (d.ctaText && d.ctaUrl) {
-      const cta = document.getElementById('popup-cta');
-      cta.textContent = d.ctaText;
-      cta.href = d.ctaUrl;
-    } else {
-      document.getElementById('popup-cta').style.display = 'none';
-    }
-    if (d.imgUrl) {
-      const img = document.getElementById('popup-img');
-      img.src = d.imgUrl;
-      img.style.display = 'block';
-    }
-    setTimeout(() => document.getElementById('popup-overlay').classList.add('open'), 1800);
-    localStorage.setItem(key, Date.now());
-  } catch {}
-})();
-
-window.closePopup = function() {
-  document.getElementById('popup-overlay').classList.remove('open');
-};
-document.getElementById('popup-overlay').addEventListener('click', e => {
-  if (e.target === document.getElementById('popup-overlay')) window.closePopup();
-});
-
 // ── NEWSLETTER ──
 window.subscribeNewsletter = async function(e) {
   e.preventDefault();
